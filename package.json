@@ -25,6 +25,11 @@
   },
   "scripts": {
   "dev": "bun run src/server.ts",
-  "typecheck": "tsc --noEmit"
-}
+  "typecheck": "tsc --noEmit",
+  "test": "bun test",
+  "test:unit": "bun test tests/unit",
+  "test:integration": "bun test tests/integration",
+  "gendb": "prisma generate",
+  "sanity": "bun run typecheck && bun test"
+  }
 }

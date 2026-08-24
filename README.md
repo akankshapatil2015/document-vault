@@ -1,19 +1,23 @@
 # Document Vault
 
-A small Document Vault backend API built with Bun, TypeScript, GraphQL Yoga, PostgreSQL, and Prisma.
+A small Document Vault backend API built with **Bun, TypeScript, GraphQL Yoga, PostgreSQL, Prisma, and Docker Compose**.
 
-The API allows users to organize documents into collections, search documents, filter by collection and archived state, move documents between collections, and paginate documents using cursor-based pagination.
+The API allows users to organize documents into collections, search and filter documents, move documents between collections, archive documents, and paginate documents using cursor-based pagination.
+
+---
 
 ## Tech Stack
 
 - Bun
-- TypeScript (strict mode)
+- TypeScript
 - GraphQL Yoga
 - GraphQL schema-first development
 - PostgreSQL
 - Prisma ORM
 - Docker Compose
 - Bun Test
+
+---
 
 ## Features
 
@@ -33,6 +37,7 @@ The API allows users to organize documents into collections, search documents, f
 - Update documents
 - Delete documents
 - Move documents between collections
+- Archive/unarchive documents
 - Search by substring match on title or content
 - Filter by collection
 - Filter by archived state
@@ -44,34 +49,44 @@ The API returns GraphQL errors for:
 
 - Empty collection names
 - Invalid collection slugs
+- Duplicate collection slugs
 - Empty document titles
 - Empty document content
 - Missing collections
 - Missing documents
 - Invalid pagination values
-- Duplicate collection slugs
+
+---
 
 ## Project Structure
 
 ```text
 document-vault/
+│
 ├── prisma/
 │   ├── migrations/
 │   └── schema.prisma
+│
 ├── src/
 │   ├── graphql/
 │   │   ├── resolvers.ts
 │   │   └── schema.graphql
+│   │
 │   ├── lib/
 │   │   └── prisma.ts
+│   │
 │   └── server.ts
+│
 ├── tests/
 │   ├── unit/
 │   │   └── resolvers.test.ts
+│   │
 │   └── integration/
 │       └── document-vault.test.ts
+│
 ├── docker-compose.yml
 ├── package.json
 ├── prisma.config.ts
 ├── tsconfig.json
+├── .gitignore
 └── README.md

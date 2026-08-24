@@ -150,6 +150,16 @@ bun install
 
 ---
 
+## ⚡ Quick Start
+
+After cloning the repository, the complete local setup can be started with:
+
+```bash
+docker compose up -d && bun install && bun run gendb && bun run dev
+```
+
+---
+
 ## 🔐 Environment Variables
 
 Create a `.env` file in the project root:
@@ -937,6 +947,22 @@ GraphQL endpoint:
 ```text
 http://localhost:4000/graphql
 ```
+
+---
+
+# 🔮 Future Improvements
+
+If this service were extended beyond the assignment scope, I would consider:
+
+- Adding authentication and user ownership for collections and documents
+- Adding authorization and role-based permissions
+- Adding richer document search using PostgreSQL full-text search
+- Adding soft deletion and document versioning
+- Adding automated CI checks with GitHub Actions
+- Adding API observability through structured logging and metrics
+- Adding deployment configuration for a production environment
+
+These features were intentionally kept out of the current implementation to keep the solution focused on the assignment requirements.
 
 ---
 

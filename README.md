@@ -40,7 +40,7 @@ The API follows a **GraphQL schema-first** approach, with the schema defined in 
 - Update documents
 - Delete documents
 - Move documents between collections
-- Archive/unarchive documents
+- Archive and unarchive documents
 - Search by title or content
 - Case-insensitive substring search
 - Filter by collection
@@ -72,9 +72,9 @@ The API returns GraphQL errors for:
 | GraphQL | API layer |
 | PostgreSQL | Relational database |
 | Prisma ORM | Database access and migrations |
+| Zod | Input validation |
 | Docker Compose | Local PostgreSQL environment |
 | Bun Test | Unit and integration testing |
-| Zod | Input validation |
 
 ---
 
@@ -114,7 +114,7 @@ document-vault/
 
 ---
 
-# 🛠️ Prerequisites
+## 🛠️ Prerequisites
 
 Make sure the following are installed:
 
@@ -133,7 +133,7 @@ git --version
 
 ---
 
-# 📦 Installation
+## 📦 Installation
 
 Clone the repository:
 
@@ -150,7 +150,7 @@ bun install
 
 ---
 
-# 🔐 Environment Variables
+## 🔐 Environment Variables
 
 Create a `.env` file in the project root:
 
@@ -166,9 +166,18 @@ For other environments, configure `DATABASE_URL` with the appropriate PostgreSQL
 
 ---
 
-# 🐘 Start PostgreSQL
+## 🐘 Start PostgreSQL
 
 The project uses Docker Compose to run PostgreSQL locally.
+
+The Docker configuration uses:
+
+- PostgreSQL 16
+- Database: `document_vault`
+- User: `vault_user`
+- Port: `5432`
+- Container: `document-vault-postgres`
+- Persistent Docker volume: `postgres_data`
 
 Start the database:
 
@@ -200,9 +209,23 @@ Expected output:
 /var/run/postgresql:5432 - accepting connections
 ```
 
+To stop PostgreSQL:
+
+```bash
+docker compose down
+```
+
+To stop PostgreSQL and remove the local database volume:
+
+```bash
+docker compose down -v
+```
+
+> The `-v` option deletes the local PostgreSQL data volume.
+
 ---
 
-# 🗄️ Prisma Setup
+## 🗄️ Prisma Setup
 
 Generate the Prisma Client:
 
@@ -236,7 +259,7 @@ bunx prisma migrate status
 
 ---
 
-# ▶️ Run the API
+## ▶️ Run the API
 
 Start the development server:
 
@@ -256,7 +279,7 @@ Open the endpoint in a browser to use the GraphiQL interface.
 
 ---
 
-# 🔌 GraphQL API
+## 🔌 GraphQL API
 
 The API uses a **schema-first GraphQL architecture**.
 
@@ -288,7 +311,9 @@ PostgreSQL
 
 ---
 
-## Create a Collection
+## 📚 Collections
+
+### Create a Collection
 
 ```graphql
 mutation {
@@ -306,9 +331,7 @@ mutation {
 }
 ```
 
----
-
-## List Collections
+### List Collections
 
 ```graphql
 query {
@@ -321,9 +344,7 @@ query {
 }
 ```
 
----
-
-## Get a Collection
+### Get a Collection
 
 Replace `<collection-id>` with an ID returned from `createCollection`.
 
@@ -349,9 +370,9 @@ query {
 
 ---
 
-# 📄 Documents
+## 📄 Documents
 
-## Create a Document
+### Create a Document
 
 Replace `<collection-id>` with an existing collection ID.
 
@@ -376,9 +397,7 @@ mutation {
 }
 ```
 
----
-
-## List Documents
+### List Documents
 
 ```graphql
 query {
@@ -402,7 +421,7 @@ query {
 
 ---
 
-## Search Documents
+## 🔎 Search Documents
 
 Documents can be searched by title or content.
 
@@ -428,9 +447,9 @@ Search uses case-insensitive substring matching.
 
 ---
 
-# 🔎 Filter Documents
+## 🔍 Filter Documents
 
-## Filter by Collection
+### Filter by Collection
 
 ```graphql
 query {
@@ -444,7 +463,7 @@ query {
 }
 ```
 
-## Filter Archived Documents
+### Filter Archived Documents
 
 ```graphql
 query {
@@ -460,7 +479,7 @@ query {
 
 ---
 
-# 📑 Cursor-Based Pagination
+## 📑 Cursor-Based Pagination
 
 The `documents` query supports:
 
@@ -517,7 +536,7 @@ The API limits `take` to a maximum of `100`.
 
 ---
 
-# ✏️ Update a Document
+## ✏️ Update a Document
 
 Replace `<document-id>` with an existing document ID.
 
@@ -543,7 +562,7 @@ mutation {
 
 ---
 
-# 📂 Move a Document
+## 📂 Move a Document
 
 ```graphql
 mutation {
@@ -560,7 +579,7 @@ mutation {
 
 ---
 
-# 🗑️ Delete a Document
+## 🗑️ Delete a Document
 
 ```graphql
 mutation {
@@ -575,35 +594,35 @@ mutation {
 
 ---
 
-# 🧪 Testing
+## 🧪 Testing
 
 The project includes both unit and integration tests.
 
-## Run All Tests
+### Run All Tests
 
 ```bash
 bun test
 ```
 
-## Run Unit Tests
+### Run Unit Tests
 
 ```bash
 bun run test:unit
 ```
 
-## Run Integration Tests
+### Run Integration Tests
 
 ```bash
 bun run test:integration
 ```
 
-## Type Checking
+### Type Checking
 
 ```bash
 bun run typecheck
 ```
 
-## Run Complete Sanity Check
+### Run Complete Sanity Check
 
 ```bash
 bun run sanity
@@ -613,7 +632,7 @@ The `sanity` script runs TypeScript type checking followed by the complete test 
 
 ---
 
-# ✅ Test Coverage
+## ✅ Test Coverage
 
 The test suite covers:
 
@@ -742,7 +761,7 @@ This allows clients to request subsequent pages using the ID of the last returne
 
 ## Input Validation
 
-Validation is performed before database operations.
+Input validation is performed before database operations using the application's validation layer.
 
 Examples:
 
@@ -760,7 +779,7 @@ Missing collection
 GraphQL error
 ```
 
-This ensures invalid input is rejected before attempting the corresponding database operation.
+This ensures invalid input is rejected before the corresponding database operation.
 
 ---
 
@@ -806,19 +825,19 @@ This makes the codebase easier to maintain and gives each layer a clear responsi
 
 # 🛠️ Useful Commands
 
-## Start PostgreSQL
+### Start PostgreSQL
 
 ```bash
 docker compose up -d
 ```
 
-## Stop PostgreSQL
+### Stop PostgreSQL
 
 ```bash
 docker compose down
 ```
 
-## Stop PostgreSQL and Remove Local Database Volume
+### Stop PostgreSQL and Remove Local Database Volume
 
 ```bash
 docker compose down -v
@@ -826,55 +845,55 @@ docker compose down -v
 
 > The `-v` option deletes the local PostgreSQL data volume.
 
-## Generate Prisma Client
+### Generate Prisma Client
 
 ```bash
 bunx prisma generate
 ```
 
-## Check Migration Status
+### Check Migration Status
 
 ```bash
 bunx prisma migrate status
 ```
 
-## Create a Migration
+### Create a Migration
 
 ```bash
 bunx prisma migrate dev --name <migration-name>
 ```
 
-## Run the API
+### Run the API
 
 ```bash
 bun run dev
 ```
 
-## Run All Tests
+### Run All Tests
 
 ```bash
 bun test
 ```
 
-## Run Unit Tests
+### Run Unit Tests
 
 ```bash
 bun run test:unit
 ```
 
-## Run Integration Tests
+### Run Integration Tests
 
 ```bash
 bun run test:integration
 ```
 
-## Run Type Checking
+### Run Type Checking
 
 ```bash
 bun run typecheck
 ```
 
-## Run All Checks
+### Run All Checks
 
 ```bash
 bun run sanity
@@ -911,6 +930,16 @@ bun run typecheck
 
 ---
 
+# 🔌 API Endpoint
+
+GraphQL endpoint:
+
+```text
+http://localhost:4000/graphql
+```
+
+---
+
 # 📦 Repository
 
 GitHub repository:
@@ -926,7 +955,9 @@ The repository contains:
 - Docker configuration
 - Unit tests
 - Integration tests
-- Setup and API documentation
+- Environment setup instructions
+- API examples
+- Architecture and design documentation
 
 ---
 
